@@ -1,0 +1,5 @@
+canvasapi
+requests
+notebooklm-py
+playwright
+python-dotenv
