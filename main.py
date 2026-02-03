@@ -98,6 +98,9 @@ async def sync_courses(canvas_client, state_manager, notebook_client, args):
                 file_name = getattr(file, 'filename', f"file_{file_id}")
                 
                 # Filter logic can go here (extensions etc.)
+                if not file_name.endswith(('.pdf', '.docx', '.txt', '.md', '.pptx', '.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp', '.html')):
+                    logging.info(f"Skipping file: {file_name}")
+                    continue
 
                 if not state_manager.is_file_processed(file_id):
                     logging.info(f"New file found: {file_name}")
