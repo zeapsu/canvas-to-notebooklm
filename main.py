@@ -98,7 +98,7 @@ async def sync_courses(canvas_client, state_manager, notebook_client, args):
                 file_name = getattr(file, 'filename', f"file_{file_id}")
                 
                 # Filter logic can go here (extensions etc.)
-                if not file_name.endswith(('.pdf', '.docx', '.txt', '.md', '.pptx', '.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp', '.html')):
+                if file_name.endswith(('.mp3', '.mp4', '.mov', '.avi', '.wmv', '.flv', '.mkv', '.webm', '.ogg', '.wav', '.aac', '.m4a', '.wma', '.flac', '.opus', '.amr', '.aiff', '.au', '.mid', '.midi', '.rmi', '.cda', '.m4b', '.m4p', '.m4r', '.m4v', '.3gp', '.3g2', '.avi', '.wmv', '.flv', '.mkv', '.webm', '.ogg', '.wav', '.aac', '.m4a', '.wma', '.flac', '.opus', '.amr', '.aiff', '.au', '.mid', '.midi', '.rmi', '.cda', '.m4b', '.m4p', '.m4r', '.m4v', '.3gp', '.3g2')):
                     logging.info(f"Skipping file: {file_name}")
                     continue
 
