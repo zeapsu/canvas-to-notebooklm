@@ -8,24 +8,24 @@ This guide will help you get `canvas-to-notebooklm` up and running.
 - A **Google** account for NotebookLM.
 
 ## Installation
-First, grab the code and install the python requirements:
+First, grab the code and sync dependencies with `uv`:
 
 ```bash
 git clone ...
 cd canvas-to-notebooklm
-pip install -r requirements.txt
+uv sync
 ```
 
 ## Authentication
 
 We need to authenticate with two services: **Google NotebookLM** and **Canvas**.
 
-### Primary Method: `notebooklm login`
+### Primary Method: `uv run notebooklm login`
 The easiest way to authenticate with Google is using the CLI provided by the `notebooklm-py` library.
 
 1.  Run the login command:
     ```bash
-    notebooklm login
+    uv run notebooklm login
     ```
 2.  A browser window (or a link) should appear asking you to sign in to your Google Account.
 3.  Once signed in, the tool saves your session cookies locally.
@@ -71,7 +71,7 @@ $env:CANVAS_KEY="<your_token_here>"
 By default, running the script launches the interactive main menu:
 
 ```bash
-python main.py
+uv run python main.py
 ```
 
 You will see the following options:
@@ -86,12 +86,16 @@ You can skip the menu for automated workflows (e.g., cron jobs):
 | Flag | Description |
 |---|---|
 | `-y`, `--yes` | Skip all confirmation prompts (auto-confirm). |
-| `--update-existing` | Only check courses already in the local DB. |
+| `--sync-managed-courses` | Only sync courses already in the local DB. |
+| `--update-existing` | Alias for `--sync-managed-courses` (backward compatibility). |
+| `--list-managed-courses` (alias: `--list-managed`) | List all managed courses currently in the local DB. |
+| `--delete "<course_id_or_name>"` | Delete one managed course from local DB by ID or name. |
+| `--delete-all` | Delete all managed courses from local DB. |
 | `--interactive` | Force the menu to appear (default behavior). |
 
 **Example: Daily cron job**
 ```bash
-python main.py -y --update-existing
+uv run python main.py --sync-managed-courses -y
 ```
 
 ### Logging

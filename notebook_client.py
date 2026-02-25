@@ -31,10 +31,10 @@ class NotebookLMClientWrapper: # Renamed to avoid confusion with the library cla
         logging.info("Logging in to NotebookLM...")
         # This functionality is usually handled by the library's CLI or a separate script.
         # For this wrapper, we assume the user might need to run a manual step via CLI: 
-        # `notebooklm login`
+        # `uv run notebooklm login`
         # But we can try to automate if needed.
         # For now, we'll guide the user.
-        print("To login, please run 'notebooklm login' in your terminal.")
+        print("To login, please run 'uv run notebooklm login' in your terminal.")
 
     async def create_notebook(self, title: str) -> str:
         """

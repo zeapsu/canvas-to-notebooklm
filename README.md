@@ -28,14 +28,14 @@ Let's be real: downloading 50+ PDFs, organizing them into folders, and then manu
 2. **Install dependencies:**
 
    ```bash
-   pip install -r requirements.txt
+   uv sync
    ```
 
 3. **Login to NotebookLM:**
    We use the nifty `notebooklm-py` library. Run this once to authenticate:
 
    ```bash
-   notebooklm login
+   uv run notebooklm login
    ```
 
    _Follow the instructions in the terminal to complete the login._
@@ -53,15 +53,31 @@ Let's be real: downloading 50+ PDFs, organizing them into folders, and then manu
 5. **Run it:**
 
    ```bash
-   python main.py
+   uv run python main.py
    ```
 
    This will launch the **Interactive Menu**.
 
    **Power User Flags:**
 
-   - `python main.py -y`: Automated mode (yes to all).
-   - `python main.py --update-existing`: Only sync known courses.
+   - `uv run python main.py -y`: Automated mode (yes to all).
+   - `uv run python main.py --sync-managed-courses -y`: Sync all managed courses non-interactively.
+   - `uv run python main.py --list-managed-courses` (alias: `--list-managed`): List managed courses from local DB.
+   - `uv run python main.py --delete "<course_id_or_name>"`: Delete one managed course from local DB.
+   - `uv run python main.py --delete-all -y`: Delete all managed courses from local DB.
+
+## Dependency Management
+
+This project uses `uv` for dependency and environment management.
+
+- Dependency definitions live in `pyproject.toml`.
+- Exact resolved versions are locked in `uv.lock`.
+- Use `uv sync` after dependency changes to update your local environment.
+
+### New to uv?
+
+- Install `uv`: <https://docs.astral.sh/uv/getting-started/installation/>
+- Basic usage guide: <https://docs.astral.sh/uv/getting-started/features/>
 
 ## Configuration
 
