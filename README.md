@@ -1,5 +1,7 @@
 # Canvas to NotebookLM 🎓 ➡️ 🤖
 
+[![CI](https://github.com/zeapsu/canvas-to-notebooklm/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/zeapsu/canvas-to-notebooklm/actions/workflows/ci.yml)
+
 Stop manually downloading every single PDF from Canvas. This tool automatically syncs your Canvas course files directly into Google NotebookLM, so you can turn your study materials into an AI podcast or chat with them instantly.
 
 ## Why?
