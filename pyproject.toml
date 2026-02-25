@@ -1,0 +1,13 @@
+[project]
+name = "canvas-to-notebooklm"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "canvasapi>=3.4.0",
+    "notebooklm-py>=0.3.2",
+    "playwright>=1.58.0",
+    "python-dotenv>=1.2.1",
+    "requests>=2.32.5",
+]
