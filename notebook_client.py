@@ -1,10 +1,10 @@
-import asyncio
-from notebooklm import NotebookLMClient
+import logging
 from typing import Optional
 
-import logging
+from notebooklm import NotebookLMClient
 
-class NotebookLMClientWrapper: # Renamed to avoid confusion with the library class
+
+class NotebookLMClientWrapper:  # Renamed to avoid confusion with the library class
     def __init__(self, headless: bool = True):
         """
         Initialize the NotebookLM Client Wrapper.
@@ -30,7 +30,7 @@ class NotebookLMClientWrapper: # Renamed to avoid confusion with the library cla
         """
         logging.info("Logging in to NotebookLM...")
         # This functionality is usually handled by the library's CLI or a separate script.
-        # For this wrapper, we assume the user might need to run a manual step via CLI: 
+        # For this wrapper, we assume the user might need to run a manual step via CLI:
         # `uv run notebooklm login`
         # But we can try to automate if needed.
         # For now, we'll guide the user.
@@ -54,16 +54,16 @@ class NotebookLMClientWrapper: # Renamed to avoid confusion with the library cla
         logging.info(f"Uploading {file_path} to notebook {notebook_id}...")
         client = await self._get_client()
         async with client:
-            # add_file returns the Source object or ID? 
+            # add_file returns the Source object or ID?
             # Looking at library code (via inspection earlier): SourceAPI.add_file returns 'Source' object usually.
             # verify call: await client.sources.add_file(notebook_id, file_path)
             source = await client.sources.add_file(notebook_id, file_path)
-            
+
             # If add_file returns a Source object, we can get its ID.
-            source_id = getattr(source, 'id', None)
-            
+            source_id = getattr(source, "id", None)
+
             if source_id:
-                 # Wait for processing
+                # Wait for processing
                 try:
                     await client.sources.wait_for_sources(notebook_id, source_ids=[source_id])
                 except Exception as e:

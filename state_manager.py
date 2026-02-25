@@ -1,6 +1,6 @@
 import sqlite3
-import os
 from datetime import datetime
+
 
 class StateManager:
     def __init__(self, db_path="state.db"):
@@ -16,19 +16,19 @@ class StateManager:
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        
+
         # Courses table
-        cursor.execute('''
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS courses (
                 course_id TEXT PRIMARY KEY,
                 course_name TEXT,
                 notebook_lm_id TEXT,
                 last_synced_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
-        ''')
+        """)
 
         # Files table
-        cursor.execute('''
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS files (
                 file_id TEXT PRIMARY KEY,
                 course_id TEXT,
@@ -37,8 +37,8 @@ class StateManager:
                 last_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY(course_id) REFERENCES courses(course_id)
             )
-        ''')
-        
+        """)
+
         conn.commit()
         conn.close()
 
@@ -48,7 +48,7 @@ class StateManager:
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        cursor.execute('SELECT notebook_lm_id FROM courses WHERE course_id = ?', (course_id,))
+        cursor.execute("SELECT notebook_lm_id FROM courses WHERE course_id = ?", (course_id,))
         result = cursor.fetchone()
         conn.close()
         return result[0] if result else None
@@ -59,14 +59,17 @@ class StateManager:
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        cursor.execute('''
+        cursor.execute(
+            """
             INSERT INTO courses (course_id, notebook_lm_id, course_name, last_synced_at)
             VALUES (?, ?, ?, ?)
             ON CONFLICT(course_id) DO UPDATE SET 
                 notebook_lm_id=excluded.notebook_lm_id,
                 course_name=coalesce(excluded.course_name, courses.course_name),
                 last_synced_at=excluded.last_synced_at
-        ''', (course_id, notebook_id, course_name, datetime.now()))
+        """,
+            (course_id, notebook_id, course_name, datetime.now().isoformat(timespec="seconds")),
+        )
         conn.commit()
         conn.close()
 
@@ -77,7 +80,7 @@ class StateManager:
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        cursor.execute('SELECT course_id, course_name, notebook_lm_id FROM courses')
+        cursor.execute("SELECT course_id, course_name, notebook_lm_id FROM courses")
         results = cursor.fetchall()
         conn.close()
         return results
@@ -90,8 +93,8 @@ class StateManager:
         cursor = conn.cursor()
         try:
             # Delete associated files first (foreign key constraint usually handles this but good to be explicit/safe)
-            cursor.execute('DELETE FROM files WHERE course_id = ?', (course_id,))
-            cursor.execute('DELETE FROM courses WHERE course_id = ?', (course_id,))
+            cursor.execute("DELETE FROM files WHERE course_id = ?", (course_id,))
+            cursor.execute("DELETE FROM courses WHERE course_id = ?", (course_id,))
             conn.commit()
             return True
         except Exception as e:
@@ -106,7 +109,9 @@ class StateManager:
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        cursor.execute("SELECT 1 FROM files WHERE file_id = ? AND upload_status = 'uploaded'", (file_id,))
+        cursor.execute(
+            "SELECT 1 FROM files WHERE file_id = ? AND upload_status = 'uploaded'", (file_id,)
+        )
         result = cursor.fetchone()
         conn.close()
         return result is not None
@@ -117,12 +122,15 @@ class StateManager:
         """
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
-        cursor.execute('''
+        cursor.execute(
+            """
             INSERT INTO files (file_id, course_id, file_name, upload_status, last_updated_at)
             VALUES (?, ?, ?, 'uploaded', ?)
             ON CONFLICT(file_id) DO UPDATE SET 
                 upload_status='uploaded',
                 last_updated_at=excluded.last_updated_at
-        ''', (file_id, course_id, file_name, datetime.now()))
+        """,
+            (file_id, course_id, file_name, datetime.now().isoformat(timespec="seconds")),
+        )
         conn.commit()
         conn.close()

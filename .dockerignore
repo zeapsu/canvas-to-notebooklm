@@ -1,0 +1,14 @@
+.git
+.github
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.log
+state.db
+temp_downloads
+canvas_sync.log
+.env
+tests
+docs

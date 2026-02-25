@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./state.db:/app/state.db
+      - ./temp_downloads:/app/temp_downloads
+      - ./canvas_sync.log:/app/canvas_sync.log
+    command: ["canvas-to-notebooklm", "--sync-managed-courses", "-y"]
