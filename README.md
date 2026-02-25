@@ -53,18 +53,18 @@ Let's be real: downloading 50+ PDFs, organizing them into folders, and then manu
 5. **Run it:**
 
    ```bash
-   uv run python main.py
+   uv run canvas-to-notebooklm
    ```
 
    This will launch the **Interactive Menu**.
 
    **Power User Flags:**
 
-   - `uv run python main.py -y`: Automated mode (yes to all).
-   - `uv run python main.py --sync-managed-courses -y`: Sync all managed courses non-interactively.
-   - `uv run python main.py --list-managed-courses` (alias: `--list-managed`): List managed courses from local DB.
-   - `uv run python main.py --delete "<course_id_or_name>"`: Delete one managed course from local DB.
-   - `uv run python main.py --delete-all -y`: Delete all managed courses from local DB.
+   - `uv run canvas-to-notebooklm -y`: Automated mode (yes to all).
+   - `uv run canvas-to-notebooklm --sync-managed-courses -y`: Sync all managed courses non-interactively.
+   - `uv run canvas-to-notebooklm --list-managed-courses` (alias: `--list-managed`): List managed courses from local DB.
+   - `uv run canvas-to-notebooklm --delete "<course_id_or_name>"`: Delete one managed course from local DB.
+   - `uv run canvas-to-notebooklm --delete-all -y`: Delete all managed courses from local DB.
 
 ## Dependency Management
 
@@ -73,6 +73,7 @@ This project uses `uv` for dependency and environment management.
 - Dependency definitions live in `pyproject.toml`.
 - Exact resolved versions are locked in `uv.lock`.
 - Use `uv sync` after dependency changes to update your local environment.
+- A CLI entrypoint is exposed as `canvas-to-notebooklm`.
 
 ### New to uv?
 
@@ -85,6 +86,62 @@ The tool relies on environment variables for Canvas access:
 
 - `CANVAS_URL`: Your institution's Canvas URL (e.g., `https://canvas.uw.edu`).
 - `CANVAS_KEY`: Your personal access token. [Here's how to generate one](https://community.canvaslms.com/t5/Student-Guide/How-do-I-manage-API-access-tokens-as-a-student/ta-p/273).
+
+## Development Workflow
+
+Install tooling and dev dependencies:
+
+```bash
+uv sync --group dev
+```
+
+Run checks locally:
+
+```bash
+uv run ruff check .
+uv run ruff format --check .
+uv run mypy main.py canvas_client.py notebook_client.py state_manager.py
+uv run pytest
+```
+
+Set up pre-commit hooks:
+
+```bash
+uv run pre-commit install
+uv run pre-commit run --all-files
+```
+
+## Docker
+
+Build and run with Docker:
+
+```bash
+docker compose build
+docker compose run --rm app
+```
+
+The default compose command is managed sync mode:
+
+```bash
+canvas-to-notebooklm --sync-managed-courses -y
+```
+
+For one-off commands:
+
+```bash
+docker compose run --rm app canvas-to-notebooklm --list-managed-courses
+```
+
+Note: NotebookLM auth still needs a valid session/cookies setup before fully headless runs.
+
+## CI
+
+GitHub Actions runs on push/PR and enforces:
+
+- `ruff check`
+- `ruff format --check`
+- `mypy` (core modules)
+- `pytest`
 
 ## Documentation
 

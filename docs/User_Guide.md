@@ -3,7 +3,7 @@
 This guide will help you get `canvas-to-notebooklm` up and running.
 
 ## Prerequisites
-- **Python 3.10+** installed on your machine.
+- **Python 3.12+** installed on your machine.
 - A **Canvas** account (student or teacher) with API access.
 - A **Google** account for NotebookLM.
 
@@ -14,6 +14,12 @@ First, grab the code and sync dependencies with `uv`:
 git clone ...
 cd canvas-to-notebooklm
 uv sync
+```
+
+For contributors (lint/test/type-check tooling included):
+
+```bash
+uv sync --group dev
 ```
 
 ## Authentication
@@ -71,7 +77,7 @@ $env:CANVAS_KEY="<your_token_here>"
 By default, running the script launches the interactive main menu:
 
 ```bash
-uv run python main.py
+uv run canvas-to-notebooklm
 ```
 
 You will see the following options:
@@ -95,11 +101,48 @@ You can skip the menu for automated workflows (e.g., cron jobs):
 
 **Example: Daily cron job**
 ```bash
-uv run python main.py --sync-managed-courses -y
+uv run canvas-to-notebooklm --sync-managed-courses -y
 ```
+
+### Legacy Invocation
+
+`uv run python main.py ...` still works, but `uv run canvas-to-notebooklm ...` is the preferred CLI entrypoint.
 
 ### Logging
 The tool creates a `canvas_sync.log` file in the project directory. Check this file for detailed error messages or to see what files were processed.
+
+## Developer Quality Gates
+
+Run the same checks as CI:
+
+```bash
+uv run ruff check .
+uv run ruff format --check .
+uv run mypy main.py canvas_client.py notebook_client.py state_manager.py
+uv run pytest
+```
+
+Use pre-commit:
+
+```bash
+uv run pre-commit install
+uv run pre-commit run --all-files
+```
+
+## Docker Workflow
+
+Build and run:
+
+```bash
+docker compose build
+docker compose run --rm app
+```
+
+Run one-off actions:
+
+```bash
+docker compose run --rm app canvas-to-notebooklm --list-managed-courses
+```
 
 ## Troubleshooting
 
