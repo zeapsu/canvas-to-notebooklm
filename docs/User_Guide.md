@@ -29,6 +29,13 @@ We need to authenticate with two services: **Google NotebookLM** and **Canvas**.
 ### Primary Method: `uv run notebooklm login`
 The easiest way to authenticate with Google is using the CLI provided by the `notebooklm-py` library.
 
+> **First time only — install Playwright browsers:**
+> After `uv sync`, you must install the browser binaries that Playwright uses for the login flow. If you skip this step you'll see an error like `playwright._impl._errors.Error: Executable doesn't exist`.
+> ```bash
+> uv run playwright install
+> ```
+> You only need to do this once.
+
 1.  Run the login command:
     ```bash
     uv run notebooklm login
